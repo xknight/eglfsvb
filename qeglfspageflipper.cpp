@@ -41,6 +41,8 @@
 
 #include "qeglfspageflipper.h"
 
+#include <QImage>
+
 #include <QDebug>
 
 QT_BEGIN_NAMESPACE
@@ -51,7 +53,11 @@ QEglFSPageFlipper::QEglFSPageFlipper()
 
 bool QEglFSPageFlipper::displayBuffer(QPlatformScreenBuffer *buffer)
 {
-    qDebug() << "flip" << buffer;
+    qDebug() << "flip" << static_cast<QImage *>(buffer->handle())->size();
+
+    // TODO: open fbdev and map to screen
+    QImage *frame = static_cast<QImage *>(buffer->handle());
+
     return false;
 }
 

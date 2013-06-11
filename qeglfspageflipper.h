@@ -57,7 +57,7 @@ public:
 
 private:
     Q_INVOKABLE void setDirectRenderingActive(bool active);
-
+    int fd;
 };
 
 QT_END_NAMESPACE
