@@ -47,23 +47,32 @@
 
 QT_BEGIN_NAMESPACE
 
-QEglFSPageFlipper::QEglFSPageFlipper()
+QEglFSPageFlipper::QEglFSPageFlipper() : m_buffer(0)
 {
 }
 
 bool QEglFSPageFlipper::displayBuffer(QPlatformScreenBuffer *buffer)
 {
-    qDebug() << "flip" << static_cast<QImage *>(buffer->handle())->size();
+    buffer->aboutToBeDisplayed();
 
     // TODO: open fbdev and map to screen
     QImage *frame = static_cast<QImage *>(buffer->handle());
 
-    return false;
+    buffer->displayed();
+
+    if (m_buffer)
+        m_buffer->release();
+    m_buffer = buffer;
+
+    return true;
 }
 
 void QEglFSPageFlipper::setDirectRenderingActive(bool active)
 {
-    qDebug() << "direct rendering active" << active;
+    if (!active && m_buffer) {
+        m_buffer->release();
+        m_buffer = 0;
+    }
 }
 
 QT_END_NAMESPACE

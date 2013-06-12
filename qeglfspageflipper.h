@@ -57,6 +57,9 @@ public:
 
 private:
     Q_INVOKABLE void setDirectRenderingActive(bool active);
+
+    QPlatformScreenBuffer *m_buffer;
+
     int fd;
 };
 
