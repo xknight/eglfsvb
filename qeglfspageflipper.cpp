@@ -43,20 +43,50 @@
 
 #include <QImage>
 
-#include <QDebug>
+#include <sys/mman.h>
+#include <memory.h>
+#include <fcntl.h>
 
 QT_BEGIN_NAMESPACE
 
 QEglFSPageFlipper::QEglFSPageFlipper() : m_buffer(0)
 {
+    fd = open("/dev/fb0", O_RDWR | O_CLOEXEC);
+    if (fd < 0)
+        qFatal("QEglFsPageFlipper: could not open /dev/fb0.");
+}
+
+QEglFSPageFlipper::~QEglFSPageFlipper()
+{
+    if (fd >= 0)
+        close(fd);
+
+    if (m_buffer)
+        m_buffer->release();
 }
 
 bool QEglFSPageFlipper::displayBuffer(QPlatformScreenBuffer *buffer)
 {
+    QImage *frame = static_cast<QImage *>(buffer->handle());
+
+    QImage tmpFrame;
+    if (frame->width() * 4 != frame->bytesPerLine()) {
+        tmpFrame = frame->copy();
+        frame = &tmpFrame;
+    }
+
+
+    int area = frame->bytesPerLine() * frame->height();
+    void *mapped = mmap(NULL, area, PROT_WRITE, MAP_SHARED, fd, 0);
+    if (mapped == MAP_FAILED) {
+        qWarning("Unable to map fbdev.\n");
+        return false;
+    }
+
     buffer->aboutToBeDisplayed();
 
-    // TODO: open fbdev and map to screen
-    QImage *frame = static_cast<QImage *>(buffer->handle());
+    memcpy(mapped, frame->constBits(), area);
+    munmap(mapped, area);
 
     buffer->displayed();
 

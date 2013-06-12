@@ -52,6 +52,7 @@ class QEglFSPageFlipper : public QPlatformScreenPageFlipper
 
 public:
     QEglFSPageFlipper();
+    ~QEglFSPageFlipper();
 
     bool displayBuffer(QPlatformScreenBuffer *buffer);
 
