@@ -12,6 +12,7 @@ which provide shared memory Wayland buffers (e.g. Mesa LLVMPipe).
 
 Drop this in a directory next to the original EGLFS platform plugin. It does not need to be in the Qt source tree, but
 can (EGLFS can be found at <qtbase>/src/plugins/platforms/eglfs). Assuming you have Qt 5.1 installed, you can now run:
+
     qmake
     make
     [sudo] make install
