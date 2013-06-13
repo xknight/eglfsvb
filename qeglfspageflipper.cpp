@@ -49,14 +49,14 @@
 
 QT_BEGIN_NAMESPACE
 
-QEglFSPageFlipper::QEglFSPageFlipper() : m_buffer(0)
+QEglFSVBPageFlipper::QEglFSVBPageFlipper() : m_buffer(0)
 {
     fd = open("/dev/fb0", O_RDWR | O_CLOEXEC);
     if (fd < 0)
         qFatal("QEglFsPageFlipper: could not open /dev/fb0.");
 }
 
-QEglFSPageFlipper::~QEglFSPageFlipper()
+QEglFSVBPageFlipper::~QEglFSVBPageFlipper()
 {
     if (fd >= 0)
         close(fd);
@@ -65,7 +65,7 @@ QEglFSPageFlipper::~QEglFSPageFlipper()
         m_buffer->release();
 }
 
-bool QEglFSPageFlipper::displayBuffer(QPlatformScreenBuffer *buffer)
+bool QEglFSVBPageFlipper::displayBuffer(QPlatformScreenBuffer *buffer)
 {
     QImage *frame = static_cast<QImage *>(buffer->handle());
 
@@ -97,7 +97,7 @@ bool QEglFSPageFlipper::displayBuffer(QPlatformScreenBuffer *buffer)
     return true;
 }
 
-void QEglFSPageFlipper::setDirectRenderingActive(bool active)
+void QEglFSVBPageFlipper::setDirectRenderingActive(bool active)
 {
     if (!active && m_buffer) {
         m_buffer->release();

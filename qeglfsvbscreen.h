@@ -46,7 +46,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class QEglFSPageFlipper;
+class QEglFSVBPageFlipper;
 
 class QEglFSVBScreen : public QEglFSScreen
 {
@@ -57,7 +57,7 @@ public:
     QPlatformScreenPageFlipper *pageFlipper() const;
 
 private:
-    QEglFSPageFlipper *m_pageFlipper;
+    QEglFSVBPageFlipper *m_pageFlipper;
 };
 
 QT_END_NAMESPACE

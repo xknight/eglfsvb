@@ -46,13 +46,13 @@
 
 QT_BEGIN_NAMESPACE
 
-class QEglFSPageFlipper : public QPlatformScreenPageFlipper
+class QEglFSVBPageFlipper : public QPlatformScreenPageFlipper
 {
   Q_OBJECT
 
 public:
-    QEglFSPageFlipper();
-    ~QEglFSPageFlipper();
+    QEglFSVBPageFlipper();
+    ~QEglFSVBPageFlipper();
 
     bool displayBuffer(QPlatformScreenBuffer *buffer);
 

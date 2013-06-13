@@ -42,7 +42,6 @@
 #include "qeglfsvbintegration.h"
 #include "qeglfsvbscreen.h"
 
-#include <QDebug>
 #include <QGuiApplication>
 
 QT_BEGIN_NAMESPACE

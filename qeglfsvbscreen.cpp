@@ -42,13 +42,11 @@
 #include "qeglfsvbscreen.h"
 #include "qeglfspageflipper.h"
 
-#include <QDebug>
-
 QT_BEGIN_NAMESPACE
 
 QEglFSVBScreen::QEglFSVBScreen(EGLDisplay display)
     : QEglFSScreen(display)
-    , m_pageFlipper(new QEglFSPageFlipper)
+    , m_pageFlipper(new QEglFSVBPageFlipper)
 {
 }
 
@@ -59,7 +57,6 @@ QEglFSVBScreen::~QEglFSVBScreen()
 
 QPlatformScreenPageFlipper *QEglFSVBScreen::pageFlipper() const
 {
-    qDebug() << "page flipper requested";
     return m_pageFlipper;
 }
 
