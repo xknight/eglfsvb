@@ -46,6 +46,7 @@
 #include <sys/mman.h>
 #include <memory.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 QT_BEGIN_NAMESPACE
 
