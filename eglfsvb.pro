@@ -1,12 +1,10 @@
 TARGET = qeglfsvb
 
+LIBS_PRIVATE += $$QT_LIBS_GLIB
+
 PLUGIN_TYPE = platforms
 PLUGIN_CLASS_NAME = QEglFSIntegrationPlugin
-#load(qt_plugin)
-TEMPLATE = lib
-CONFIG += qt plugin
-target.path = $$[QT_INSTALL_PLUGINS]/platforms
-INSTALLS += target
+load(qt_plugin)
 
 HEADERS += \
     $$PWD/qeglfspageflipper.h \
