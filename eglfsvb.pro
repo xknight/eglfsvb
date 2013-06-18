@@ -8,13 +8,13 @@ CONFIG += link_pkgconfig
 PKGCONFIG += libudev mtdev glib-2.0
 
 HEADERS += \
-    $$PWD/qeglfspageflipper.h \
+    $$PWD/qeglfsvbpageflipper.h \
     $$PWD/qeglfsvbintegration.h \
     $$PWD/qeglfsvbscreen.h
 
 SOURCES += \
     $$PWD/main.cpp \
-    $$PWD/qeglfspageflipper.cpp \
+    $$PWD/qeglfsvbpageflipper.cpp \
     $$PWD/qeglfsvbintegration.cpp \
     $$PWD/qeglfsvbscreen.cpp
 

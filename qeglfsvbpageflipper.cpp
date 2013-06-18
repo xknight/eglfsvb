@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include "qeglfspageflipper.h"
+#include "qeglfsvbpageflipper.h"
 
 #include <QImage>
 
