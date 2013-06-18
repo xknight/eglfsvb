@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 #include "qeglfsvbscreen.h"
-#include "qeglfspageflipper.h"
+#include "qeglfsvbpageflipper.h"
 
 QT_BEGIN_NAMESPACE
 
