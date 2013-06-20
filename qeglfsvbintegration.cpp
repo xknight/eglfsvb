@@ -52,11 +52,12 @@
 
 QT_BEGIN_NAMESPACE
 
-#define VMMDEV_MOUSE_GUEST_CAN_ABSOLUTE              (1U << 0)
-#define VMMDEV_MOUSE_GUEST_NEEDS_HOST_CURSOR         (1U << 2)
-#define VMMDEV_MOUSE_NEW_PROTOCOL                    (1U << 4)
-#define VMMDEV_MOUSE_HOST_RECHECKS_NEEDS_HOST_CURSOR (1U << 5)
-#define VBOXGUEST_IOCTL_SET_MOUSE_STATUS _IOC(_IOC_READ|_IOC_WRITE, 'V', (10), (sizeof(quint32)))
+#define VMMDEV_MOUSE_GUEST_CAN_ABSOLUTE              (1UL << 0)
+#define VMMDEV_MOUSE_GUEST_NEEDS_HOST_CURSOR         (1UL << 2)
+#define VMMDEV_MOUSE_NEW_PROTOCOL                    (1UL << 4)
+#define VMMDEV_MOUSE_HOST_RECHECKS_NEEDS_HOST_CURSOR (1UL << 5)
+#define VBOXGUEST_IOCTL_CODE_(Function, Size) _IOC(_IOC_READ|_IOC_WRITE, 'V', (Function), (Size))
+#define VBOXGUEST_IOCTL_SET_MOUSE_STATUS VBOXGUEST_IOCTL_CODE_(10, sizeof(uint32_t))
 
 QEglFSVBIntegration::QEglFSVBIntegration()
     : mScreen(new QEglFSVBScreen(display()))
@@ -70,7 +71,7 @@ QEglFSVBIntegration::QEglFSVBIntegration()
     int fd = open("/dev/vboxguest", O_RDWR);
     if (fd >= 0) {
         qDebug() << "open mouse success";
-        quint32 features = VMMDEV_MOUSE_GUEST_CAN_ABSOLUTE|VMMDEV_MOUSE_GUEST_NEEDS_HOST_CURSOR
+        uint32_t features = VMMDEV_MOUSE_GUEST_CAN_ABSOLUTE|VMMDEV_MOUSE_GUEST_NEEDS_HOST_CURSOR
                            |VMMDEV_MOUSE_NEW_PROTOCOL|VMMDEV_MOUSE_HOST_RECHECKS_NEEDS_HOST_CURSOR;
         qDebug() << "ioctl" << ioctl(fd, VBOXGUEST_IOCTL_SET_MOUSE_STATUS, &features);
     }
