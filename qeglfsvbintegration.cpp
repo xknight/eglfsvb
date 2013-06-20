@@ -71,7 +71,7 @@ QEglFSVBIntegration::QEglFSVBIntegration()
     if (fd >= 0) {
         qDebug() << "open mouse success";
         quint32 features = VMMDEV_MOUSE_GUEST_CAN_ABSOLUTE|VMMDEV_MOUSE_GUEST_NEEDS_HOST_CURSOR
-                           |VMMDEV_MOUSE_HOST_RECHECKS_NEEDS_HOST_CURSOR;
+                           |VMMDEV_MOUSE_NEW_PROTOCOL|VMMDEV_MOUSE_HOST_RECHECKS_NEEDS_HOST_CURSOR;
         qDebug() << "ioctl" << ioctl(fd, VBOXGUEST_IOCTL_SET_MOUSE_STATUS, &features);
     }
 #endif
