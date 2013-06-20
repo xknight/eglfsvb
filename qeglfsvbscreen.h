@@ -56,6 +56,10 @@ public:
 
     QPlatformScreenPageFlipper *pageFlipper() const;
 
+#ifdef QT_NO_CURSOR
+    QPlatformCursor *cursor() const { return 0; }
+#endif
+
 private:
     QEglFSVBPageFlipper *m_pageFlipper;
 };

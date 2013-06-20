@@ -7,6 +7,8 @@ load(qt_plugin)
 CONFIG += link_pkgconfig
 PKGCONFIG += libudev mtdev glib-2.0
 
+DEFINES += QT_NO_CURSOR
+
 HEADERS += \
     $$PWD/qeglfsvbpageflipper.h \
     $$PWD/qeglfsvbintegration.h \

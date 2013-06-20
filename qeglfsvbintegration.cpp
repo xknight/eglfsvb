@@ -42,9 +42,20 @@
 #include "qeglfsvbintegration.h"
 #include "qeglfsvbscreen.h"
 
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+
 #include <QGuiApplication>
 
+#include <QDebug>
+
 QT_BEGIN_NAMESPACE
+
+#define VMMDEV_MOUSE_GUEST_CAN_ABSOLUTE              (1U << 0)
+#define VMMDEV_MOUSE_GUEST_NEEDS_HOST_CURSOR         (1U << 2)
+#define VMMDEV_MOUSE_HOST_RECHECKS_NEEDS_HOST_CURSOR (1U << 5)
+#define VBOXGUEST_IOCTL_SET_MOUSE_STATUS _IOC(_IOC_READ|_IOC_WRITE, 'V', 10, sizeof(quint32))
 
 QEglFSVBIntegration::QEglFSVBIntegration()
     : mScreen(new QEglFSVBScreen(display()))
@@ -52,6 +63,17 @@ QEglFSVBIntegration::QEglFSVBIntegration()
     // Override inherited screen
     delete QEglFSIntegration::screen();
     screenAdded(mScreen);
+
+#ifdef QT_NO_CURSOR
+    // Tell host to keep host cursor
+    int fd = open("/dev/vboxguest", O_WRONLY);
+    if (fd >= 0) {
+        qDebug() << "open mouse success";
+        quint32 features = VMMDEV_MOUSE_GUEST_CAN_ABSOLUTE|VMMDEV_MOUSE_GUEST_NEEDS_HOST_CURSOR;
+        qDebug() << "ioctl" << ioctl(fd, VBOXGUEST_IOCTL_SET_MOUSE_STATUS, &features);
+    }
+#endif
+
 }
 
 QT_END_NAMESPACE
