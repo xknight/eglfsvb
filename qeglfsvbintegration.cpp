@@ -56,7 +56,7 @@ QT_BEGIN_NAMESPACE
 #define VMMDEV_MOUSE_GUEST_NEEDS_HOST_CURSOR         (1U << 2)
 #define VMMDEV_MOUSE_NEW_PROTOCOL                    (1U << 4)
 #define VMMDEV_MOUSE_HOST_RECHECKS_NEEDS_HOST_CURSOR (1U << 5)
-#define VBOXGUEST_IOCTL_SET_MOUSE_STATUS _IOC(_IOC_READ|_IOC_WRITE, 'V', 10, sizeof(quint32))
+#define VBOXGUEST_IOCTL_SET_MOUSE_STATUS _IOC(_IOC_READ|_IOC_WRITE, 'V', (10), (sizeof(quint32)))
 
 QEglFSVBIntegration::QEglFSVBIntegration()
     : mScreen(new QEglFSVBScreen(display()))
