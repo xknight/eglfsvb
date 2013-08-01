@@ -46,12 +46,14 @@
 
 QT_BEGIN_NAMESPACE
 
+class QPlatformScreen;
+
 class QEglFSVBPageFlipper : public QPlatformScreenPageFlipper
 {
   Q_OBJECT
 
 public:
-    QEglFSVBPageFlipper();
+    QEglFSVBPageFlipper(QPlatformScreen *screen);
     ~QEglFSVBPageFlipper();
 
     bool displayBuffer(QPlatformScreenBuffer *buffer);
@@ -59,6 +61,7 @@ public:
 private:
     Q_INVOKABLE void setDirectRenderingActive(bool active);
 
+    QPlatformScreen *m_screen;
     QPlatformScreenBuffer *m_buffer;
 
     int fd;

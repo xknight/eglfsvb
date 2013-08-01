@@ -42,6 +42,7 @@
 #include "qeglfsvbpageflipper.h"
 
 #include <QImage>
+#include <qpa/qplatformscreen.h>
 
 #include <sys/mman.h>
 #include <memory.h>
@@ -50,7 +51,7 @@
 
 QT_BEGIN_NAMESPACE
 
-QEglFSVBPageFlipper::QEglFSVBPageFlipper() : m_buffer(0)
+QEglFSVBPageFlipper::QEglFSVBPageFlipper(QPlatformScreen *screen) : m_screen(screen), m_buffer(0)
 {
     fd = open("/dev/fb0", O_RDWR | O_CLOEXEC);
     if (fd < 0)
@@ -70,23 +71,25 @@ bool QEglFSVBPageFlipper::displayBuffer(QPlatformScreenBuffer *buffer)
 {
     QImage *frame = static_cast<QImage *>(buffer->handle());
 
-    QImage tmpFrame;
-    if (frame->width() * 4 != frame->bytesPerLine()) {
-        tmpFrame = frame->copy();
-        frame = &tmpFrame;
-    }
-
-
-    int area = frame->bytesPerLine() * frame->height();
-    void *mapped = mmap(NULL, area, PROT_WRITE, MAP_SHARED, fd, 0);
+    QRect geometry = m_screen->geometry();
+    geometry.setTopLeft(QPoint());
+    int area = geometry.width() * geometry.height() * 4;
+    quint8 *mapped = reinterpret_cast<quint8 *>(mmap(NULL, area, PROT_WRITE, MAP_SHARED, fd, 0));
     if (mapped == MAP_FAILED) {
         qWarning("Unable to map fbdev.\n");
         return false;
     }
 
     buffer->aboutToBeDisplayed();
+    if (frame->width() * 4 != frame->bytesPerLine() || frame->rect() != geometry) {
+        int stride = qMin(frame->bytesPerLine(), geometry.width() * 4);
+        int height = qMin(frame->height(), geometry.height());
+        for (int i = 0; i < height; ++i)
+            memcpy(mapped + (stride * i), frame->scanLine(i), stride);
+    } else {
+        memcpy(mapped, frame->constBits(), area);
+    }
 
-    memcpy(mapped, frame->constBits(), area);
     munmap(mapped, area);
 
     buffer->displayed();

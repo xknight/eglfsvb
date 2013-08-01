@@ -46,7 +46,7 @@ QT_BEGIN_NAMESPACE
 
 QEglFSVBScreen::QEglFSVBScreen(EGLDisplay display)
     : QEglFSScreen(display)
-    , m_pageFlipper(new QEglFSVBPageFlipper)
+    , m_pageFlipper(new QEglFSVBPageFlipper(this))
 {
 }
 
