@@ -8,14 +8,18 @@ CONFIG += link_pkgconfig
 PKGCONFIG += libudev mtdev glib-2.0
 
 HEADERS += \
-    $$PWD/qeglfsvbpageflipper.h \
+    $$PWD/qeglfsvbcontext.h \
     $$PWD/qeglfsvbintegration.h \
+    $$PWD/qeglfsvbpageflipper.h \
     $$PWD/qeglfsvbscreen.h
 
 SOURCES += \
     $$PWD/main.cpp \
-    $$PWD/qeglfsvbpageflipper.cpp \
+    $$PWD/qeglfsvbcontext.cpp \
     $$PWD/qeglfsvbintegration.cpp \
+    $$PWD/qeglfsvbpageflipper.cpp \
     $$PWD/qeglfsvbscreen.cpp
+
+DEFINES += QT_NO_CURSOR
 
 include(../eglfs/eglfs.pri)

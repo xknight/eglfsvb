@@ -58,11 +58,14 @@ public:
 
     bool displayBuffer(QPlatformScreenBuffer *buffer);
 
+    bool isActive() const { return m_active; }
+
 private:
     Q_INVOKABLE void setDirectRenderingActive(bool active);
 
     QPlatformScreen *m_screen;
     QPlatformScreenBuffer *m_buffer;
+    bool m_active;
 
     int fd;
 };

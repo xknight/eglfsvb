@@ -54,6 +54,7 @@ class QEglFSVBIntegration : public QEglFSIntegration
 {
 public:
     QEglFSVBIntegration();
+    QPlatformOpenGLContext *createPlatformOpenGLContext(QOpenGLContext *context) const;
 
 protected:
     QEglFSVBScreen *mScreen;

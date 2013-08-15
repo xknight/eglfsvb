@@ -51,7 +51,8 @@
 
 QT_BEGIN_NAMESPACE
 
-QEglFSVBPageFlipper::QEglFSVBPageFlipper(QPlatformScreen *screen) : m_screen(screen), m_buffer(0)
+QEglFSVBPageFlipper::QEglFSVBPageFlipper(QPlatformScreen *screen)
+    : m_screen(screen), m_buffer(0), m_active(false)
 {
     fd = open("/dev/fb0", O_RDWR | O_CLOEXEC);
     if (fd < 0)
@@ -103,6 +104,7 @@ bool QEglFSVBPageFlipper::displayBuffer(QPlatformScreenBuffer *buffer)
 
 void QEglFSVBPageFlipper::setDirectRenderingActive(bool active)
 {
+    m_active = active;
     if (!active && m_buffer) {
         m_buffer->release();
         m_buffer = 0;

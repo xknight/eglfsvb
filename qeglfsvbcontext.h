@@ -39,31 +39,21 @@
 **
 ****************************************************************************/
 
-#include "qeglfsvbintegration.h"
-#include "qeglfsvbscreen.h"
-#include "qeglfsvbcontext.h"
-#include "qeglfsvbpageflipper.h"
+#ifndef QEGLFSVBCONTEXT_H
+#define QEGLFSVBCONTEXT_H
 
-#include <qeglfshooks.h>
+#include <qeglfscontext.h>
 
-#include <QGuiApplication>
-#include <QOpenGLContext>
-
-QT_BEGIN_NAMESPACE
-
-QEglFSVBIntegration::QEglFSVBIntegration()
-    : mScreen(new QEglFSVBScreen(display()))
+class QEglFSVBPageFlipper;
+class QEglFSVBContext : public QEglFSContext
 {
-    // Override inherited screen
-    delete QEglFSIntegration::screen();
-    screenAdded(mScreen);
-}
+public:
+    explicit QEglFSVBContext(QEglFSVBPageFlipper *pageFlipper, const QSurfaceFormat &format, QPlatformOpenGLContext *share,
+                             EGLDisplay display, EGLenum eglApi = EGL_OPENGL_ES_API);
+    void swapBuffers(QPlatformSurface *surface);
 
-QPlatformOpenGLContext *QEglFSVBIntegration::createPlatformOpenGLContext(QOpenGLContext *context) const
-{
-    return new QEglFSVBContext(static_cast<QEglFSVBPageFlipper *>(mScreen->pageFlipper()),
-                               QEglFSHooks::hooks()->surfaceFormatFor(context->format()),
-                               context->shareHandle(), display());
-}
+private:
+    QEglFSVBPageFlipper *m_pageFlipper;
+};
 
-QT_END_NAMESPACE
+#endif // QEGLFSVBCONTEXT_H

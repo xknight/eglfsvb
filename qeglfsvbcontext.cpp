@@ -39,31 +39,21 @@
 **
 ****************************************************************************/
 
-#include "qeglfsvbintegration.h"
-#include "qeglfsvbscreen.h"
 #include "qeglfsvbcontext.h"
+
 #include "qeglfsvbpageflipper.h"
 
-#include <qeglfshooks.h>
-
-#include <QGuiApplication>
-#include <QOpenGLContext>
-
-QT_BEGIN_NAMESPACE
-
-QEglFSVBIntegration::QEglFSVBIntegration()
-    : mScreen(new QEglFSVBScreen(display()))
+QEglFSVBContext::QEglFSVBContext(QEglFSVBPageFlipper *pageFlipper, const QSurfaceFormat &format,
+                                 QPlatformOpenGLContext *share, EGLDisplay display, EGLenum eglApi)
+    : QEglFSContext(format, share, display, eglApi), m_pageFlipper(pageFlipper)
 {
-    // Override inherited screen
-    delete QEglFSIntegration::screen();
-    screenAdded(mScreen);
 }
 
-QPlatformOpenGLContext *QEglFSVBIntegration::createPlatformOpenGLContext(QOpenGLContext *context) const
+void QEglFSVBContext::swapBuffers(QPlatformSurface *surface)
 {
-    return new QEglFSVBContext(static_cast<QEglFSVBPageFlipper *>(mScreen->pageFlipper()),
-                               QEglFSHooks::hooks()->surfaceFormatFor(context->format()),
-                               context->shareHandle(), display());
+    if (m_pageFlipper->isActive()) {
+        qWarning("Warning: eglSwapBuffers() called while direct rendering");
+        return;
+    }
+    return QEglFSContext::swapBuffers(surface);
 }
-
-QT_END_NAMESPACE
