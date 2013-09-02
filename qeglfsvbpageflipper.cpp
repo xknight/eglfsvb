@@ -42,6 +42,9 @@
 #include "qeglfsvbpageflipper.h"
 
 #include <QImage>
+#include <QGuiApplication>
+#include <QWindow>
+#include <QScreen>
 #include <qpa/qplatformscreen.h>
 
 #include <sys/mman.h>
@@ -52,7 +55,7 @@
 QT_BEGIN_NAMESPACE
 
 QEglFSVBPageFlipper::QEglFSVBPageFlipper(QPlatformScreen *screen)
-    : m_screen(screen), m_buffer(0), m_active(false)
+    : m_screen(screen), m_window(0), m_buffer(0), m_active(false)
 {
     fd = open("/dev/fb0", O_RDWR | O_CLOEXEC);
     if (fd < 0)
@@ -71,6 +74,14 @@ QEglFSVBPageFlipper::~QEglFSVBPageFlipper()
 bool QEglFSVBPageFlipper::displayBuffer(QPlatformScreenBuffer *buffer)
 {
     QImage *frame = static_cast<QImage *>(buffer->handle());
+
+#ifdef QT_EGLFSVB_ENABLE_ROTATION
+    QImage rotatedFrame;
+    if (!m_transform.isIdentity()) {
+        rotatedFrame = frame->transformed(m_transform);
+        frame = &rotatedFrame;
+    }
+#endif // QT_EGLFSVB_ENABLE_ROTATION
 
     QRect geometry = m_screen->geometry();
     geometry.setTopLeft(QPoint());
@@ -109,6 +120,36 @@ void QEglFSVBPageFlipper::setDirectRenderingActive(bool active)
         m_buffer->release();
         m_buffer = 0;
     }
+#ifndef QT_EGLFSVB_ENABLE_ROTATION
 }
+#else // !QT_EGLFSVB_ENABLE_ROTATION
+    static bool connected = false;
+    if (!connected)
+        connected = connect(qGuiApp, SIGNAL(focusWindowChanged(QWindow*)), SLOT(setWindow(QWindow*)));
+    if (!m_window)
+        setWindow(QGuiApplication::focusWindow());
+}
+
+void QEglFSVBPageFlipper::setWindow(QWindow *window)
+{
+    if (m_window == window)
+        return;
+
+    disconnect(m_window);
+    m_window = window;
+    if (m_window) {
+        connect(m_window, SIGNAL(contentOrientationChanged(Qt::ScreenOrientation)), SLOT(setOrientation(Qt::ScreenOrientation)));
+        setOrientation(m_window->contentOrientation());
+    }
+}
+
+void QEglFSVBPageFlipper::setOrientation(Qt::ScreenOrientation orientation)
+{
+    QTransform transform;
+    if (int angle = m_screen->screen()->angleBetween(Qt::PrimaryOrientation, orientation))
+        transform.rotate(angle);
+    m_transform = transform;
+}
+#endif // QT_EGLFSVB_ENABLE_ROTATION
 
 QT_END_NAMESPACE

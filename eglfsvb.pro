@@ -20,6 +20,6 @@ SOURCES += \
     $$PWD/qeglfsvbpageflipper.cpp \
     $$PWD/qeglfsvbscreen.cpp
 
-DEFINES += QT_NO_CURSOR
+DEFINES += QT_NO_CURSOR QT_EGLFSVB_ENABLE_ROTATION
 
-include(../eglfs/eglfs.pri)
+include($$PWD/../eglfs/eglfs.pri)

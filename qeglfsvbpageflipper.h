@@ -43,10 +43,12 @@
 #define QEGLFSVBPAGEFLIPPER_H
 
 #include <qpa/qplatformscreenpageflipper.h>
+#include <QTransform>
 
 QT_BEGIN_NAMESPACE
 
 class QPlatformScreen;
+class QWindow;
 
 class QEglFSVBPageFlipper : public QPlatformScreenPageFlipper
 {
@@ -60,12 +62,20 @@ public:
 
     bool isActive() const { return m_active; }
 
+private slots:
+#ifdef QT_EGLFSVB_ENABLE_ROTATION
+    void setWindow(QWindow *window);
+    void setOrientation(Qt::ScreenOrientation orientation);
+#endif
+
 private:
     Q_INVOKABLE void setDirectRenderingActive(bool active);
 
     QPlatformScreen *m_screen;
+    QWindow *m_window;
     QPlatformScreenBuffer *m_buffer;
     bool m_active;
+    QTransform m_transform;
 
     int fd;
 };
